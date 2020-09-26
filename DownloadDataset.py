@@ -6,13 +6,24 @@ destination_path = './vot_lt2019/'    # destination path
 json_path = './description.json'      # vot 2019 json file
 anno_vot = 'vot2019/longterm'                  # vot2019 or vot2018 or vot2017
  
- 
 with open(json_path,'r') as json_file:
     json_data = json.load(json_file)
 home_page = json_data['homepage']
+
+# read history
+if os.path.exists('history') == False: 
+    count = 0
+    with open('history', 'w') as history_file:
+        history_file.write(count)
+else:
+    with open('history', 'r') as history_file:
+        line = history_file.readline()
+        count = int(line)
  
 for i,sequence in enumerate(json_data['sequences']):
-    print('download the {} sequences'.format(i+1))
+    if i < count:
+        continue
+    print('download the {} sequences...'.format(i+1))
 
     # get annotations_url and data_url
     annotations_url = sequence['annotations']['url']
@@ -35,30 +46,33 @@ for i,sequence in enumerate(json_data['sequences']):
  
     # annotations download and unzip and remove it
     wget.download(download_annotations_url, anno_output_name)
-    print('loading {} annotation'.format(name))
+    print('unzip {} annotation...'.format(name))
     # unzip
     file_zip = zipfile.ZipFile(anno_output_name,'r')
     for file in file_zip.namelist():
         file_zip.extract(file, out_dir)
-        print('extract annotation {}/{}'.format(name,file))
+        # print('extract annotation {}/{}'.format(name,file))
     file_zip.close()
     os.remove(anno_output_name)
-    print('remove annotation {}.zip'.format(name))
+    print('remove annotation {}.zip!'.format(name))
  
     # image download and unzip and remove it
     out_dir = os.path.dirname(image_output_name)
     if os.path.exists(out_dir) == False:
         os.mkdir(out_dir)
     wget.download(download_data_url,image_output_name)
-    print('loading {} sequence'.format(name))
+    print('unzip {} sequence...'.format(name))
     # unzip
     file_zip = zipfile.ZipFile(image_output_name,'r')
     for file  in file_zip.namelist():
         file_zip.extract(file,out_dir)
-        print('extract image {}'.format(file))
+        # print('extract image {}'.format(file))
     file_zip.close()
     os.remove(image_output_name)
-    print('remove image file {}.zip'.format(name))
+    print('remove image file {}.zip!'.format(name))
 
+    # write history
+    with open(history.txt, 'w') as history_file:
+        history_file.write(i + 1)
     # download completed
     print('sequence  {} Completed!'.format(i+1))
