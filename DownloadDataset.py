@@ -46,7 +46,7 @@ for i,sequence in enumerate(json_data['sequences']):
  
     # annotations download and unzip and remove it
     wget.download(download_annotations_url, anno_output_name)
-    print('unzip {} annotation...'.format(name))
+    print('\nunzip {} annotation...'.format(name))
     # unzip
     file_zip = zipfile.ZipFile(anno_output_name,'r')
     for file in file_zip.namelist():
@@ -61,7 +61,7 @@ for i,sequence in enumerate(json_data['sequences']):
     if os.path.exists(out_dir) == False:
         os.mkdir(out_dir)
     wget.download(download_data_url,image_output_name)
-    print('unzip {} sequence...'.format(name))
+    print('\nunzip {} sequence...'.format(name))
     # unzip
     file_zip = zipfile.ZipFile(image_output_name,'r')
     for file  in file_zip.namelist():
@@ -75,4 +75,4 @@ for i,sequence in enumerate(json_data['sequences']):
     with open(history.txt, 'w') as history_file:
         history_file.write(i + 1)
     # download completed
-    print('sequence  {} Completed!'.format(i+1))
+    print('sequence  {} Completed!\n'.format(i+1))
