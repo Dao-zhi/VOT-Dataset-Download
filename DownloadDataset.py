@@ -1,6 +1,7 @@
 import json
 import os
 import wget,tarfile,zipfile
+import gc
  
 destination_path = './vot_lt2019/'    # destination path
 json_path = './description.json'      # vot 2019 json file
@@ -45,7 +46,7 @@ for i,sequence in enumerate(json_data['sequences']):
         os.mkdir(out_dir)
  
     # annotations download and unzip and remove it
-    wget.download(download_annotations_url, anno_output_name)
+    '''wget.download(download_annotations_url, anno_output_name)
     print('\nunzip {} annotation...'.format(name))
     # unzip
     file_zip = zipfile.ZipFile(anno_output_name,'r')
@@ -54,7 +55,7 @@ for i,sequence in enumerate(json_data['sequences']):
         # print('extract annotation {}/{}'.format(name,file))
     file_zip.close()
     os.remove(anno_output_name)
-    print('remove annotation {}.zip!'.format(name))
+    print('remove annotation {}.zip!'.format(name))'''
  
     # image download and unzip and remove it
     out_dir = os.path.dirname(image_output_name)
@@ -72,7 +73,8 @@ for i,sequence in enumerate(json_data['sequences']):
     print('remove image file {}.zip!'.format(name))
 
     # write history
-    with open(history.txt, 'w') as history_file:
-        history_file.write(i + 1)
+    with open("history", 'w') as history_file:
+        history_file.write(str(i + 1))
     # download completed
-    print('sequence  {} Completed!\n'.format(i+1))
+    print('sequence {} Completed!\n'.format(i+1))
+    gc.collect()
